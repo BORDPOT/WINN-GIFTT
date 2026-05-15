@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Me amas?</title>
+<style>
+/* ---------------------------- ESTILOS GENERALES ---------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 1.5s ease;
+}
+
+/* ---------------------------- FASE 1: LA PREGUNTA ---------------------------- */
+#fase1 {
+  text-align: center;
+  transition: opacity 1s ease;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #880e4f;
+  margin-bottom: 2rem;
+}
+
+button {
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 10px;
+  margin: 0 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#siBtn {
+  background-color: #e91e63;
+  color: white;
+}
+
+#noBtn {
+  background-color: #f8bbd0;
+  color: #880e4f;
+}
+
+/* ---------------------------- FASE 2: GALERÍA ROMÁNTICA ---------------------------- */
+#fase2 {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top left, #2a002a, #ff4081);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  text-align: center;
+  color: white;
+}
+
+.foto-container {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.foto-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+/* Animación cuando aparece la foto */
+.foto-container.mostrar {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------------------------- EFECTO DE EXPLOSIÓN ---------------------------- */
+@keyframes explosion {
+  0% { transform: scale(0); opacity: 1; }
+  80% { transform: scale(3); opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.corazon {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: pink;
+  transform: rotate(45deg);
+  animation: explosion 1s forwards;
+}
+
+.corazon::before,
+.corazon::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: pink;
+  border-radius: 50%;
+}
+
+.corazon::before { top: -7.5px; left: 0; }
+.corazon::after { left: -7.5px; top: 0; }
+
+/* ---------------------------- EFECTO FINAL: CORAZONES CAYENDO ---------------------------- */
+@keyframes caer {
+  0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+.caer {
+  position: absolute;
+  top: -10px;
+  font-size: 24px;
+  color: #ff80ab;
+  animation: caer 5s linear infinite;
+}
+
+/* Mensaje final */
+#mensajeFinal {
+  position: absolute;
+  bottom: 20%;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+#mensajeFinal.mostrar { opacity: 1; }
+
+/* ---------------------------- RESPONSIVE ---------------------------- */
+@media (max-width: 480px) {
+  h1 { font-size: 1.8rem; }
+  button { font-size: 1rem; padding: 0.8rem 1.5rem; }
+  #mensajeFinal { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ---------------------------- FASE 1 ---------------------------- -->
+<div id="fase1">
+  <h1>¿do you love me? winnie winn</h1>
+  <button id="siBtn">yes</button>
+  <button id="noBtn">No</button>
+</div>
+
+<!-- ---------------------------- FASE 2 ---------------------------- -->
+<div id="fase2">
+  <div class="foto-container" id="fotoContainer">
+    <img src="winnie.jpeg" alt="Foto romántica">
+  </div>
+  <div id="mensajeFinal">thanks for every beautiful moment that you gifted me... ❤️<br>we will see each other very soooon</div>
+</div>
+
+<script>
+/* ---------------------------- LÓGICA FASE 1 ---------------------------- */
+const siBtn = document.getElementById('siBtn');
+const noBtn = document.getElementById('noBtn');
+const fase1 = document.getElementById('fase1');
+const fase2 = document.getElementById('fase2');
+
+let siSize = 1.2;
+let noSize = 1.2;
+
+noBtn.addEventListener('click', () => {
+  siSize += 0.5;
+  noSize -= 0.1;
+  siBtn.style.fontSize = siSize + 'rem';
+  siBtn.style.padding = (1 + siSize/3) + 'rem ' + (2 + siSize/2) + 'rem';
+  noBtn.style.fontSize = Math.max(noSize, 0.5) + 'rem';
+  noBtn.style.padding = Math.max(noSize * 0.6, 0.4) + 'rem ' + Math.max(noSize * 0.8, 0.6) + 'rem';
+});
+
+siBtn.addEventListener('click', () => {
+  fase1.style.opacity = '0';
+  setTimeout(() => {
+    fase1.style.display = 'none';
+    iniciarFase2();
+  }, 1000);
+});
+
+/* ---------------------------- LÓGICA FASE 2 ---------------------------- */
+const fotos = ["WIN1.jpeg", "WIN2.jpeg", "WIN3.jpeg", "WIN4.jpeg"]; // <-- CAMBIA AQUÍ TUS IMÁGENES
+const fotoContainer = document.getElementById('fotoContainer');
+const mensajeFinal = document.getElementById('mensajeFinal');
+
+function crearExplosion() {
+  for (let i = 0; i < 20; i++) {
+    const corazon = document.createElement('div');
+    corazon.classList.add('corazon');
+    corazon.style.left = Math.random() * 100 + '%';
+    corazon.style.top = Math.random() * 100 + '%';
+    corazon.style.background = `hsl(${Math.random()*360}, 70%, 70%)`;
+    fase2.appendChild(corazon);
+    setTimeout(() => corazon.remove(), 1000);
+  }
+}
+
+function mostrarFoto(i) {
+  if (i >= fotos.length) {
+    mostrarFinal();
+    return;
+  }
+  crearExplosion();
+  setTimeout(() => {
+    fotoContainer.classList.remove('mostrar');
+    setTimeout(() => {
+      fotoContainer.querySelector('img').src = fotos[i];
+      fotoContainer.classList.add('mostrar');
+      setTimeout(() => mostrarFoto(i + 1), 2500);
+    }, 800);
+  }, 800);
+}
+
+function mostrarFinal() {
+  crearExplosion();
+  // corazones cayendo
+  for (let i = 0; i < 40; i++) {
+    const h = document.createElement('div');
+    h.classList.add('caer');
+    h.innerHTML = '❤️';
+    h.style.left = Math.random() * 100 + '%';
+    h.style.animationDuration = (3 + Math.random() * 4) + 's';
+    h.style.fontSize = (16 + Math.random() * 20) + 'px';
+    fase2.appendChild(h);
+  }
+  mensajeFinal.classList.add('mostrar');
+}
+
+function iniciarFase2() {
+  fase2.style.display = 'flex';
+  setTimeout(() => {
+    mostrarFoto(0);
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
